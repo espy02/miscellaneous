@@ -1,11 +1,12 @@
 file = open("input")
-file_in = file.read()
+data = file.read()
 file.close()
 
 floor = 0
-for i in file_in:
-    if i == "(":
+for p in data:
+    if p == "(":
         floor += 1
-    elif i == ")":
+    elif p == ")":
         floor -= 1
-print("Floor:", floor)
+
+print("Floor:", floor)  # Floor: 232

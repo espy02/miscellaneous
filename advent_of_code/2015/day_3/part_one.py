@@ -1,11 +1,11 @@
 file = open("input")
-file_in = file.read()
+data = file.read()
 file.close()
 
 houses = ["0_0"]
 x = 0
 y = 0
-for i in file_in:
+for i in data:
     if i == ">":
         x += 1
     elif i == "<":
@@ -17,4 +17,4 @@ for i in file_in:
     if str(x) + "_" + str(y) not in houses:
         houses.append(str(x) + "_" + str(y))
 
-print("Houses that received at least one present: " + str(len(houses)))
+print("Houses that received at least one present:", len(houses))  # Houses that received at least one present: 2081

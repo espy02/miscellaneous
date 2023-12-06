@@ -1,15 +1,14 @@
 file = open("input")
-file_in = file.readlines()
+data = file.readlines()
 file.close()
 
 grid = {}
 
-for instruction in file_in:
+for instruction in data:
     action = ""
     through = instruction.find("through")
     left = []
     right = instruction[through + 8:].split(",")
-
     if instruction.find("on") != -1:
         action = "on"
         left = instruction[8:through - 1].split(",")
@@ -25,7 +24,6 @@ for instruction in file_in:
             coordinates = str(i) + "_" + str(j)
             if coordinates not in grid:
                 grid[coordinates] = False
-
             if action == "on":
                 if not grid[coordinates]:
                     grid[coordinates] = True
@@ -40,4 +38,4 @@ for on in grid.values():
     if on:
         lights_lit += 1
 
-print("Lights lit:", lights_lit)
+print("Lights lit:", lights_lit)  # Lights lit: 569999

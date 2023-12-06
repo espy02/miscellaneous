@@ -1,13 +1,13 @@
 file = open("input")
-file_in = file.read()
+data = file.read()
 file.close()
 
 floor = 0
-for i in range(len(file_in)):
-    if file_in[i] == "(":
+for i in range(len(data)):
+    if data[i] == "(":
         floor += 1
-    elif file_in[i] == ")":
+    elif data[i] == ")":
         floor -= 1
     if floor == -1:
-        print("Position:", (i + 1))
+        print("Position:", i + 1)  # Position: 1783
         break

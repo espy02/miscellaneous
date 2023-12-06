@@ -1,15 +1,14 @@
 file = open("input")
-file_in = file.readlines()
+data = file.readlines()
 file.close()
 
 grid = {}
 
-for instruction in file_in:
+for instruction in data:
     action = ""
     through = instruction.find("through")
     left = []
     right = instruction[through + 8:].split(",")
-
     if instruction.find("on") != -1:
         action = "on"
         left = instruction[8:through - 1].split(",")
@@ -25,7 +24,6 @@ for instruction in file_in:
             coordinates = str(i) + "_" + str(j)
             if coordinates not in grid:
                 grid[coordinates] = False
-
             if action == "on":
                 grid[coordinates] += 1
             if action == "off":
@@ -40,4 +38,4 @@ total_brightness = 0
 for brightness in grid.values():
     total_brightness += brightness
 
-print("Total brightness:", total_brightness)
+print("Total brightness:", total_brightness)  # Total brightness: 17836115
