@@ -1,103 +1,87 @@
-file = open("input")  # What a mess, need to optimize this
-data = file.readlines()
-file.close()
+def findSignalInCircuit(d, w):
+    signals = {}
+    instructions_index = []
+    index = -1
 
-signals = {}
-instructions_index = []
-index = -1
+    while len(instructions_index) != len(d):
+        index = (index + 1) % len(d)
+        add_to_dictionary = False
+        if index not in instructions_index:
+            wire = d[index].split(" ")
+            right = wire[-3]
+            wire_id = wire[-1]
+            if index != len(d) - 1:
+                wire_id = wire_id[:-1]
+            wire_signal = 0
 
-while len(instructions_index) != len(data):
-    index = (index + 1) % len(data)
+            if len(wire) == 3:
+                if right.isdecimal():
+                    wire_signal = int(right)
+                    add_to_dictionary = True
+                elif right.isalpha() and right in signals:
+                    wire_signal = int(signals[right])
+                    add_to_dictionary = True
+            elif len(wire) == 4:
+                if right.isdecimal():
+                    wire_signal = ~ int(right)
+                    add_to_dictionary = True
+                elif right.isalpha() and right in signals:
+                    wire_signal = ~ int(signals[right])
+                    add_to_dictionary = True
+            elif len(wire) == 5:
+                left = wire[0]
+                if "AND" in wire:
+                    if left.isdecimal() and right in signals:
+                        wire_signal = int(left) & int(signals[right])
+                        add_to_dictionary = True
+                    elif right.isdecimal() and left in signals:
+                        wire_signal = int(signals[left]) & int(right)
+                        add_to_dictionary = True
+                    elif left in signals and right in signals:
+                        wire_signal = int(signals[left]) & int(signals[right])
+                        add_to_dictionary = True
+                elif "OR" in wire:
+                    if left.isdecimal() and right in signals:
+                        wire_signal = int(left) | int(signals[right])
+                        add_to_dictionary = True
+                    elif right.isdecimal() and left in signals:
+                        wire_signal = int(signals[left]) | int(right)
+                        add_to_dictionary = True
+                    elif left in signals and right in signals:
+                        wire_signal = int(signals[left]) | int(signals[right])
+                        add_to_dictionary = True
+                elif "LSHIFT" in wire:
+                    if left.isdecimal() and right in signals:
+                        wire_signal = int(left) << int(signals[right])
+                        add_to_dictionary = True
+                    elif right.isdecimal() and left in signals:
+                        wire_signal = int(signals[left]) << int(right)
+                        add_to_dictionary = True
+                    elif left in signals and right in signals:
+                        wire_signal = int(signals[left]) << int(signals[right])
+                        add_to_dictionary = True
+                elif "RSHIFT" in wire:
+                    if left.isdecimal() and right in signals:
+                        wire_signal = int(left) >> int(signals[right])
+                        add_to_dictionary = True
+                    elif right.isdecimal() and left in signals:
+                        wire_signal = int(signals[left]) >> int(right)
+                        add_to_dictionary = True
+                    elif left in signals and right in signals:
+                        wire_signal = int(signals[left]) >> int(signals[right])
+                        add_to_dictionary = True
 
-    if index not in instructions_index:
-        wire = data[index].split(" ")
-        if index != len(data) - 1:
-            wire[-1] = wire[-1][:-1]
-        if "AND" in wire:
-            left = wire[0]
-            right = wire[2]
-            wire_id = wire[4]
-            wire_signal = 0
-            if left.isdecimal() and right in signals:
-                wire_signal = int(left) & signals[right]
+            if add_to_dictionary:
                 signals[wire_id] = wire_signal
                 instructions_index.append(index)
-            elif right.isdecimal() and left in signals:
-                wire_signal = signals[left] & int(right)
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            elif right.isalpha() and left in signals and right in signals:
-                wire_signal = signals[left] & signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-        elif "OR" in wire:
-            left = wire[0]
-            right = wire[2]
-            wire_id = wire[4]
-            wire_signal = 0
-            if left.isdecimal() and right in signals:
-                wire_signal = int(left) | signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            elif right.isdecimal() and left in signals:
-                wire_signal = signals[left] | int(right)
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            elif right.isalpha() and left in signals and right in signals:
-                wire_signal = signals[left] | signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-        elif "NOT" in wire:
-            left = wire[1]
-            wire_id = wire[3]
-            if left in signals:
-                wire_signal = ~ signals[left]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-        elif "LSHIFT" in wire:
-            left = wire[0]
-            right = wire[2]
-            wire_id = wire[4]
-            wire_signal = 0
-            if left.isdecimal() and right in signals:
-                wire_signal = int(left) << signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            if right.isdecimal() and left in signals:
-                wire_signal = signals[left] << int(right)
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            elif right.isalpha() and left in signals and right in signals:
-                wire_signal = signals[left] << signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-        elif "RSHIFT" in wire:
-            left = wire[0]
-            right = wire[2]
-            wire_id = wire[4]
-            wire_signal = 0
-            if left.isdecimal() and right in signals:
-                wire_signal = int(left) >> signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            if right.isdecimal() and left in signals:
-                wire_signal = signals[left] >> int(right)
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-            elif right.isalpha() and left in signals and right in signals:
-                wire_signal = signals[left] >> signals[right]
-                signals[wire_id] = wire_signal
-                instructions_index.append(index)
-        elif wire[0].isalpha() and wire[0] in signals:
-            wire_id = wire[2]
-            wire_signal = signals[wire[0]]
-            signals[wire_id] = int(wire_signal)
-            instructions_index.append(index)
-        elif wire[0].isdecimal():
-            wire_id = wire[2]
-            wire_signal = int(wire[0])
-            signals[wire_id] = wire_signal
-            instructions_index.append(index)
 
-wire_a_signal = signals["a"]
-print("Signal of wire 'a':", wire_a_signal)  # Signal of wire 'a': 3176
+    return signals[w]
+
+
+if __name__ == "__main__":
+    file = open("input")
+    data = file.readlines()
+    file.close()
+
+    signal_of_wire_a = findSignalInCircuit(data, "a")
+    print("Signal of wire 'a':", signal_of_wire_a)  # Signal of wire 'a': 3176
