@@ -11,7 +11,8 @@ while len(instructions_index) != len(data):
 
     if index not in instructions_index:
         wire = data[index].split(" ")
-        wire[-1] = wire[-1][:-1]
+        if index != len(data) - 1:
+            wire[-1] = wire[-1][:-1]
         if "AND" in wire:
             left = wire[0]
             right = wire[2]
