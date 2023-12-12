@@ -35,7 +35,7 @@ def findSignalInCircuit(f: list[str], w: str) -> int:
                     wire_signal = ~ int(signals[right])
                     add_to_dictionary = True
             elif len(wire) == 5:  # instructions for AND, OR, LSHIFT and RSHIFT gates
-                left = wire[0]
+                left = wire[0]  # identifier of the first wire in the instruction, or first signal
                 if "AND" in wire:
                     if left.isdecimal() and right in signals:  # instructions like 1 AND b -> c
                         wire_signal = int(left) & int(signals[right])
