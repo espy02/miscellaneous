@@ -7,14 +7,14 @@ def findSignalInCircuit(f: list[str], w: str) -> int:
     """
     signals = {}  # key is the identifier of the wire, value is the signal of the wire
     instructions_index = []  # stores the index of the instructions that have already been processed
-    index = -1
+    index = -1  # index of the file
 
-    while len(instructions_index) != len(f):
+    while len(instructions_index) != len(f):  # loop until every instruction has been processed
         index = (index + 1) % len(f)  # cycles through every index
         add_to_dictionary = False
         if index not in instructions_index:  # won't process instruction if index already in instruction_index
             wire = f[index].split(" ")
-            right = wire[-3]  # identifier of the wire to the left of the arrow, or a signal
+            right = wire[-3]  # identifier of the wire, or signal, to the left of the arrow
             wire_id = wire[-1]  # identifier of the wire to the right of the arrow
             if index != len(f) - 1:  # used to remove newline (\n) character, except for the last line of the file
                 wire_id = wire_id[:-1]
@@ -35,7 +35,7 @@ def findSignalInCircuit(f: list[str], w: str) -> int:
                     wire_signal = ~ int(signals[right])
                     add_to_dictionary = True
             elif len(wire) == 5:  # instructions for AND, OR, LSHIFT and RSHIFT gates
-                left = wire[0]  # identifier of the first wire in the instruction, or first signal
+                left = wire[0]  # identifier of the wire, or signal, of the leftmost element of the instruction
                 if "AND" in wire:
                     if left.isdecimal() and right in signals:  # instructions like 1 AND b -> c
                         wire_signal = int(left) & int(signals[right])
@@ -77,7 +77,7 @@ def findSignalInCircuit(f: list[str], w: str) -> int:
                         wire_signal = int(signals[left]) >> int(signals[right])
                         add_to_dictionary = True
 
-            if add_to_dictionary:
+            if add_to_dictionary:  # finalize instruction by storing the identifier and value
                 signals[wire_id] = wire_signal
                 instructions_index.append(index)
 
