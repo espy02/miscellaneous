@@ -26,7 +26,7 @@
             } else {
                 new_url += location.href.substring(i, i + 1); // append next character
             }
-        } else { // prevents from appending to the href string the next two characters, if dont_append < 3
+        } else { // prevents from appending to new_url the next two characters, if dont_append < 3
             dont_append++;
         }
     }
